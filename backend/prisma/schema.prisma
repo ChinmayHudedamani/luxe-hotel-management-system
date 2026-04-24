@@ -1,0 +1,74 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "sqlite" url = env("DATABASE_URL") }
+
+enum Role { ADMIN MANAGER RECEPTIONIST HOUSEKEEPING }
+enum BookingStatus { RESERVED CHECKED_IN CHECKED_OUT CANCELLED }
+enum RoomStatus { AVAILABLE OCCUPIED CLEANING MAINTENANCE }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(RECEPTIONIST)
+  createdAt DateTime @default(now())
+}
+
+model Guest {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  phone     String
+  country   String
+  vip       Boolean   @default(false)
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+}
+
+model Room {
+  id          Int        @id @default(autoincrement())
+  number      String     @unique
+  type        String
+  floor       Int
+  status      RoomStatus @default(AVAILABLE)
+  price       Float
+  capacity    Int
+  amenities   String
+  image       String
+  bookings    Booking[]
+}
+
+model Booking {
+  id          Int           @id @default(autoincrement())
+  code        String        @unique
+  guestId     Int
+  roomId      Int
+  checkIn     DateTime
+  checkOut    DateTime
+  status      BookingStatus @default(RESERVED)
+  totalAmount Float
+  notes       String?
+  guest       Guest         @relation(fields: [guestId], references: [id])
+  room        Room          @relation(fields: [roomId], references: [id])
+  payments    Payment[]
+  createdAt   DateTime      @default(now())
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  bookingId Int
+  amount    Float
+  method    String
+  paidAt    DateTime @default(now())
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+}
+
+model StaffTask {
+  id        Int      @id @default(autoincrement())
+  title     String
+  area      String
+  priority  String
+  status    String   @default("OPEN")
+  dueAt     DateTime
+  createdAt DateTime @default(now())
+}
