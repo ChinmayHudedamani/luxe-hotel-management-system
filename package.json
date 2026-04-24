@@ -9,5 +9,7 @@
     "build": "npm run build --prefix frontend",
     "seed": "npm run seed --prefix backend"
   },
-  "devDependencies": {"concurrently":"^9.1.0"}
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
 }

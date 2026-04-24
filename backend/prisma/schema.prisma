@@ -1,9 +1,32 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "sqlite" url = env("DATABASE_URL") }
+generator client {
+  provider = "prisma-client-js"
+}
 
-enum Role { ADMIN MANAGER RECEPTIONIST HOUSEKEEPING }
-enum BookingStatus { RESERVED CHECKED_IN CHECKED_OUT CANCELLED }
-enum RoomStatus { AVAILABLE OCCUPIED CLEANING MAINTENANCE }
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  RECEPTIONIST
+  HOUSEKEEPING
+}
+
+enum BookingStatus {
+  RESERVED
+  CHECKED_IN
+  CHECKED_OUT
+  CANCELLED
+}
+
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  CLEANING
+  MAINTENANCE
+}
 
 model User {
   id        Int      @id @default(autoincrement())
@@ -26,16 +49,16 @@ model Guest {
 }
 
 model Room {
-  id          Int        @id @default(autoincrement())
-  number      String     @unique
-  type        String
-  floor       Int
-  status      RoomStatus @default(AVAILABLE)
-  price       Float
-  capacity    Int
-  amenities   String
-  image       String
-  bookings    Booking[]
+  id        Int        @id @default(autoincrement())
+  number    String     @unique
+  type      String
+  floor     Int
+  status    RoomStatus @default(AVAILABLE)
+  price     Float
+  capacity  Int
+  amenities String
+  image     String
+  bookings  Booking[]
 }
 
 model Booking {
